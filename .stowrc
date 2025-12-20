@@ -1,0 +1,8 @@
+--target=~/.config
+--ignore=.stowrc
+--ignore=DS_Store
+--ignore=bootstrap.sh
+--ignore=README.md
+--ignore=scripts
+--ignore=images
+--ignore=LICENSE

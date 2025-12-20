@@ -1,0 +1,11 @@
+font-family = "SauceCodePro NF Medium"
+font-size = 18
+theme = 0x96f
+term = xterm-256color
+
+# nn
+background-blur-radius = 40
+background-opacity = 0.8
+mouse-hide-while-typing = true
+window-decoration = true
+macos-option-as-alt = true

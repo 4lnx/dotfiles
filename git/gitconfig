@@ -1,0 +1,15 @@
+[user]
+	name = 4Lnx
+	email = 4lnx.notfound@gmail.com
+	signingkey = 665409A06E35B005
+[merge]
+	tool = vimdiff
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[commit]
+	gpgsign = true
+[init]
+	defaultBranch = main
