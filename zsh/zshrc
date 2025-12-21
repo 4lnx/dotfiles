@@ -119,9 +119,6 @@ alias pdu='podman compose up -d'
 alias pdd='podman compose down'
 alias pdl='podman logs -f'
 
-# Kubectl
-alias k='kubectl'
-
 # Certificate Authority Manager
 alias cam='certificate-authority-manager'
 
