@@ -3,7 +3,7 @@
 # ==========================================================
 
 # ----------------------------------------------------------
-# 1. OH MY ZSH
+# OH MY ZSH
 # ----------------------------------------------------------
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -25,7 +25,7 @@ plugins=(
 )
 
 # ----------------------------------------------------------
-# 2. XDG STANDARDS (fallback if not from .zprofile)
+# XDG STANDARDS (fallback if not from .zprofile)
 # ----------------------------------------------------------
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
@@ -33,7 +33,7 @@ export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
 
 # ----------------------------------------------------------
-# 3. OS DETECTION
+# OS DETECTION
 # ----------------------------------------------------------
 if [[ "$(uname)" == "Darwin" ]]; then
   OS_TYPE="macos"
@@ -42,13 +42,8 @@ else
 fi
 
 # ----------------------------------------------------------
-# 4. PATHS AND FPATHS (BEFORE OMZ)
+# PATHS AND FPATHS (BEFORE OMZ)
 # ----------------------------------------------------------
-
-# ASDF
-export ASDF_DATA_DIR="${ASDF_DATA_DIR:-$HOME/.asdf}"
-export PATH="$ASDF_DATA_DIR/shims:$PATH"
-fpath=("$ASDF_DATA_DIR/completions" $fpath)
 
 # User local binaries
 export PATH="$HOME/.local/bin:$PATH"
@@ -63,27 +58,19 @@ if [[ "$OS_TYPE" == "macos" ]]; then
   fi
 fi
 
-# Antigravity
-if [[ -d "$HOME/.antigravity/antigravity/bin" ]]; then
-  export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
-fi
-
-# LM Studio
-if [[ -d "$HOME/.lmstudio/bin" ]]; then
-  export PATH="$HOME/.lmstudio/bin:$PATH"
-fi
-
 # ----------------------------------------------------------
-# 5. LOAD OH MY ZSH
+# LOAD OH MY ZSH
 # ----------------------------------------------------------
 source "$ZSH/oh-my-zsh.sh"
 
 # ----------------------------------------------------------
-# 6. LANGUAGE / EDITOR
+# LANGUAGE / EDITOR (macOS)
 # ----------------------------------------------------------
-export LANG="en_US.UTF-8"
-export LC_CTYPE="en_US.UTF-8"
-export LC_ALL="en_US.UTF-8"
+if [[ "$OS_TYPE" == "macos" ]]; then
+    export LANG="pt_BR.UTF-8"
+    export LC_CTYPE="pt_BR.UTF-8"
+    export LC_ALL="pt_BR.UTF-8"
+fi
 
 # Preferred editor
 if command -v nvim >/dev/null; then
@@ -91,25 +78,22 @@ if command -v nvim >/dev/null; then
 fi
 
 # ----------------------------------------------------------
-# 7. SSH AGENT (macOS)
+# SSH AGENT (macOS)
 # ----------------------------------------------------------
 if [[ "$OS_TYPE" == "macos" ]]; then
   ssh-add --apple-load-keychain 2>/dev/null
 fi
 
 # ----------------------------------------------------------
-# 8. ALIASES
+# ALIASES
 # ----------------------------------------------------------
 
 # Neovim
 alias nv='nvim'
 alias nvz='nvim ~/.zshrc'
 
-# ASDF
-alias qwe='asdf'
-
 # Listing
-alias l='eza -l --icons --git -a'
+alias l='eza -l --icons --git'
 
 # Podman
 alias pd='podman'
@@ -119,21 +103,13 @@ alias pdu='podman compose up -d'
 alias pdd='podman compose down'
 alias pdl='podman logs -f'
 
-# Certificate Authority Manager
-alias cam='certificate-authority-manager'
 
 # ----------------------------------------------------------
-# 9. SDKs / INTEGRATIONS
+# SDKs / INTEGRATIONS
 # ----------------------------------------------------------
 
-# Google Cloud SDK
-if [[ -d "$HOME/.google-cloud-sdk" ]]; then
-  [[ -f "$HOME/.google-cloud-sdk/path.zsh.inc" ]] && source "$HOME/.google-cloud-sdk/path.zsh.inc"
-  [[ -f "$HOME/.google-cloud-sdk/completion.zsh.inc" ]] && source "$HOME/.google-cloud-sdk/completion.zsh.inc"
-fi
-
 # ----------------------------------------------------------
-# 10. STARSHIP PROMPT
+# STARSHIP PROMPT
 # ----------------------------------------------------------
 export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
 
@@ -142,18 +118,6 @@ if command -v starship >/dev/null; then
 fi
 
 # ----------------------------------------------------------
-# 11. MISE IN PLACE
+#  MISE IN PLACE
 # ----------------------------------------------------------
 eval "$(mise activate zsh)"
-
-
-# ----------------------------------------------------------
-# 12. LM STUDIO
-# ----------------------------------------------------------
-export PATH="$PATH:$HOME/.lmstudio/bin"
-
-
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/4lnx/.lmstudio/bin"
-# End of LM Studio CLI section
-

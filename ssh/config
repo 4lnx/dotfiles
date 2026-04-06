@@ -2,7 +2,6 @@ Host *
   AddKeysToAgent yes
   UseKeychain yes
   IdentityFile ~/.ssh/id_ed25519
-  IdentityFile ~/.ssh/id_ed25519_devops
 
 Host ssh.4lnxr.com
     ProxyCommand cloudflared access ssh --hostname %h

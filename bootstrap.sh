@@ -9,6 +9,13 @@ echo "🚀 Bootstrapping dotfiles..."
 if [[ "$(uname)" == "Darwin" ]]; then
   OS_TYPE="macos"
   echo "🖥️ OS detected: $OS_TYPE"
+elif [[ "$(uname)" == "Linux" ]]; then
+    if [[ $(cat /etc/os-release | grep -i "arch") == *"Arch"* ]]; then
+      OS_TYPE="arch"
+    else
+      OS_TYPE="linux"
+    fi
+  echo "🖥️ OS detected: $OS_TYPE"
 else
   echo "❌ Unsupported OS"
 fi
@@ -32,6 +39,11 @@ if [[ "$OS_TYPE" == "macos" ]]; then
   ./scripts/osx-app.sh
 fi
 
+if [[ "$OS_TYPE" == "arch" ]]; then
+  ./scripts/arch-app.sh
+fi
+
+
 # ------------------------------------------------------------
 # Stow dotfiles (FIRST!)
 # ------------------------------------------------------------
@@ -42,13 +54,37 @@ cd "$(dirname "$0")"
 stow .
 
 # ------------------------------------------------------------
+# Create ssh key
+# ------------------------------------------------------------
+if [[ -d "$HOME/.ssh/id_ed25519" ]]; then
+    echo "🔑 Creating SSH key..."
+    ssh-keygen -t ed25519 -a 100 -f "$HOME/.ssh/id_ed25519" -N "" -C "4lnx.notfound@gmail.com"
+fi
+
+# ------------------------------------------------------------
 # Link configuration files
 # ------------------------------------------------------------
-ln -sf "$HOME/.config/zsh/zshrc" "$HOME/.zshrc"
-ln -sf "$HOME/.config/zsh/zprofile" "$HOME/.zprofile"
-ln -sf "$HOME/.config/tmux/tmux.conf" "$HOME/.tmux.conf"
-ln -sf "$HOME/.config/git/gitconfig" "$HOME/.gitconfig"
-ln -sf "$HOME/.config/ssh/config" "$HOME/.ssh/config"
+
+dotfiles=(
+    "$HOME/.config/zsh/zshrc:$HOME/.zshrc"
+    "$HOME/.config/zsh/zprofile:$HOME/.zprofile"
+    "$HOME/.config/tmux/tmux.conf:$HOME/.tmux.conf"
+    "$HOME/.config/git/gitconfig:$HOME/.gitconfig"
+    "$HOME/.config/ssh/config:$HOME/.ssh/config"
+)
+
+for entry in "${dotfiles[@]}"; do
+    src="${entry%%:*}"
+    dst="${entry#*:}"
+
+    if [[ -e "$dst" && ! -L "$dst" ]]; then
+        echo "📦 Backing up $dst to ${dst}-backup"
+        mv "$dst" "${dst}-backup"
+    fi
+
+    echo "🔗 Linking $src -> $dst"
+    ln -sf "$src" "$dst"
+done
 
 
 # ------------------------------------------------------------

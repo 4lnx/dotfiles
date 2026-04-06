@@ -19,6 +19,7 @@ brew install \
 	neovim \
 	ghostty \
 	starship \
+	openssh \
 	podman \
 	unzip \
 	eza \
@@ -30,3 +31,5 @@ brew install \
 	tree \
 	ipcalc \
 	mise
+
+echo "🍺 Done!"
