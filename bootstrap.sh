@@ -1,7 +1,23 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
+
+handle_err() {
+  echo "❌ Error on line $1"
+  exit 1
+}
+trap 'handle_err $LINENO' ERR
 
 echo "🚀 Bootstrapping dotfiles..."
+
+# ------------------------------------------------------------
+# Pre-flight checks
+# ------------------------------------------------------------
+for cmd in stow curl unzip; do
+  if ! command -v "$cmd" &>/dev/null; then
+    echo "❌ Required command '$cmd' not found. Install it first."
+    exit 1
+  fi
+done
 
 # ------------------------------------------------------------
 # Detect OS
@@ -10,11 +26,13 @@ if [[ "$(uname)" == "Darwin" ]]; then
   OS_TYPE="macos"
   echo "🖥️ OS detected: $OS_TYPE"
 elif [[ "$(uname)" == "Linux" ]]; then
-    if [[ $(cat /etc/os-release | grep -i "arch") == *"Arch"* ]]; then
-      OS_TYPE="arch"
-    else
-      OS_TYPE="linux"
-    fi
+  if grep -qi "arch" /etc/os-release 2>/dev/null; then
+    OS_TYPE="arch"
+  elif grep -qi "ubuntu" /etc/os-release 2>/dev/null; then
+    OS_TYPE="ubuntu"
+  else
+    OS_TYPE="linux"
+  fi
   echo "🖥️ OS detected: $OS_TYPE"
 else
   echo "❌ Unsupported OS"
@@ -28,7 +46,10 @@ mkdir -p \
   "$HOME/.local/bin" \
   "$HOME/.local/share" \
   "$HOME/.cache" \
-  "$HOME/.local/state"
+  "$HOME/.local/state" \
+  "$HOME/.ssh"
+
+chmod 700 "$HOME/.ssh"
 
 # ------------------------------------------------------------
 # Packages
@@ -43,49 +64,75 @@ if [[ "$OS_TYPE" == "arch" ]]; then
   ./scripts/arch-app.sh
 fi
 
+if [[ "$OS_TYPE" == "ubuntu" ]]; then
+  ./scripts/ubuntu-app.sh
+fi
+
+# ------------------------------------------------------------
+# Backup conflicting targets before stow
+# ------------------------------------------------------------
+STOW_TARGET="$HOME/.config"
+DOTDIR="$(cd "$(dirname "$0")" && pwd)"
+
+for pkg in "$DOTDIR"/*/; do
+  pkg_name="$(basename "$pkg")"
+  case "$pkg_name" in
+    .git|scripts|images) continue ;;
+  esac
+  target="$STOW_TARGET/$pkg_name"
+  if [[ -e "$target" || -L "$target" ]]; then
+    if [[ -L "$target" ]] && [[ "$(readlink "$target")" != /* ]]; then
+      continue
+    fi
+    backup="${target}.backup"
+    echo "📦 Backing up $target to $backup"
+    mv "$target" "$backup"
+  fi
+done
 
 # ------------------------------------------------------------
 # Stow dotfiles (FIRST!)
 # ------------------------------------------------------------
 echo "🔗 Linking dotfiles with stow..."
 
-cd "$(dirname "$0")"
+cd "$DOTDIR"
 
-stow .
-
-# ------------------------------------------------------------
-# Create ssh key
-# ------------------------------------------------------------
-if [[ -d "$HOME/.ssh/id_ed25519" ]]; then
-    echo "🔑 Creating SSH key..."
-    ssh-keygen -t ed25519 -a 100 -f "$HOME/.ssh/id_ed25519" -N "" -C "4lnx.notfound@gmail.com"
-fi
+stow --restow .
 
 # ------------------------------------------------------------
 # Link configuration files
 # ------------------------------------------------------------
 
 dotfiles=(
-    "$HOME/.config/zsh/zshrc:$HOME/.zshrc"
-    "$HOME/.config/zsh/zprofile:$HOME/.zprofile"
-    "$HOME/.config/tmux/tmux.conf:$HOME/.tmux.conf"
-    "$HOME/.config/git/gitconfig:$HOME/.gitconfig"
-    "$HOME/.config/ssh/config:$HOME/.ssh/config"
+  "$HOME/.config/zsh/zshrc:$HOME/.zshrc"
+  "$HOME/.config/zsh/zprofile:$HOME/.zprofile"
+  "$HOME/.config/tmux/tmux.conf:$HOME/.tmux.conf"
+  "$HOME/.config/git/gitconfig:$HOME/.gitconfig"
+  "$HOME/.config/ssh/config:$HOME/.ssh/config"
 )
 
 for entry in "${dotfiles[@]}"; do
-    src="${entry%%:*}"
-    dst="${entry#*:}"
+  src="${entry%%:*}"
+  dst="${entry#*:}"
 
-    if [[ -e "$dst" && ! -L "$dst" ]]; then
-        echo "📦 Backing up $dst to ${dst}-backup"
-        mv "$dst" "${dst}-backup"
-    fi
+  if [[ ! -e "$src" ]]; then
+    echo "⚠️  Source $src not found, skipping $dst"
+    continue
+  fi
 
-    echo "🔗 Linking $src -> $dst"
-    ln -sf "$src" "$dst"
+  if [[ -e "$dst" && ! -L "$dst" ]]; then
+    echo "📦 Backing up $dst to ${dst}-backup"
+    mv "$dst" "${dst}-backup"
+  fi
+
+  echo "🔗 Linking $src -> $dst"
+  ln -sf "$src" "$dst"
 done
 
+# Ensure correct permissions (SSH is picky about this)
+if [[ -e "$HOME/.ssh/config" ]]; then
+  chmod 600 "$HOME/.ssh/config"
+fi
 
 # ------------------------------------------------------------
 # Oh My Zsh
@@ -109,13 +156,18 @@ fi
 # Nerd Font – SourceCodePro NF
 # ------------------------------------------------------------
 install_source_code_pro_font() {
-  echo "🔤 Installing SourceCodePro Nerd Font..."
-
   if [[ "$OS_TYPE" == "macos" ]]; then
     FONT_DIR="$HOME/Library/Fonts"
   else
     FONT_DIR="$HOME/.local/share/fonts"
   fi
+
+  if ls "$FONT_DIR" | grep -qi "saucecode\|sourcecodepro" 2>/dev/null; then
+    echo "🔤 SourceCodePro Nerd Font already installed, skipping"
+    return
+  fi
+
+  echo "🔤 Installing SourceCodePro Nerd Font..."
 
   mkdir -p "$FONT_DIR"
 
