@@ -6,3 +6,4 @@
 --ignore=scripts
 --ignore=images
 --ignore=LICENSE
+--ignore=.ssh
