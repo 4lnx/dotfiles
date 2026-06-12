@@ -20,7 +20,7 @@ brew install \
 	ghostty \
 	starship \
 	openssh \
-	podman \
+	docker \
 	unzip \
 	eza \
 	fzf \
