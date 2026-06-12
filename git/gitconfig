@@ -1,7 +1,7 @@
 [user]
 	name = 4Lnx
 	email = 4lnx.notfound@gmail.com
-	signingkey = B74A4114BDD1853A
+  signingkey = A24D72380CEFD722
 [merge]
 	tool = vimdiff
 [filter "lfs"]

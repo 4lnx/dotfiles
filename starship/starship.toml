@@ -1,7 +1,9 @@
 add_newline = false
+
 # Um prompt minimalista à esquerda
 format = """$directory$character"""
 palette = "catppuccin_mocha"
+
 # move o restante do prompt para a direita
 right_format = """$all"""
 command_timeout = 1000
@@ -9,12 +11,79 @@ command_timeout = 1000
 [character]
 vicmd_symbol = "[N] >>>"
 success_symbol = '[➜](bold green)'
+error_symbol = '[➜](bold red)'
+
+[git_status]
+ahead = "⇡${count}"
+behind = "⇣${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+modified = "!"
+staged = "+"
+deleted = "✘"
+untracked = "?"
+renamed = "»"
+conflicted = "="
 
 [git_branch]
-format =  '[$symbol$branch(:$remote_branch)]($style)'
+symbol = " "
+format = "[$symbol$branch]($style) "
+
+[jobs]
+symbol = "⚙ "
+number_threshold = 1
+
+[cmd_duration]
+min_time = 500
+format = "[$duration]($style)"
+
+[aws]
+disabled = true
+
+[gcloud]
+disabled = false
+format = "[$symbol$account(@$domain)(:$project)]($style)"
+symbol = "☁️ "
+
+[azure]
+disabled = true
+
+[kubernetes]
+disabled = false
+format = "[$symbol$context $namespace]($style)"
+symbol = "☸  "
 
 [docker_context]
+disabled = false
+symbol = "🐳 "
+format = "[$symbol$context]($style)"
+only_with_files = true
+
+[hostname]
 disabled = true
+
+[memory_usage]
+disabled = true
+
+[battery]
+disabled = true
+
+[terraform]
+symbol = "󱁢 "
+
+[rust]
+symbol = "🦀 "
+
+[golang]
+symbol = " "
+
+[nodejs]
+symbol = " "
+
+[lua]
+symbol = " "
+
+[python]
+symbol = " "
 
 [palettes.catppuccin_mocha]
 rosewater = "#f5e0dc"
