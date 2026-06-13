@@ -10,34 +10,25 @@ trap 'handle_err $LINENO' ERR
 echo "🚀 Bootstrapping dotfiles..."
 
 # ------------------------------------------------------------
-# Pre-flight checks
-# ------------------------------------------------------------
-for cmd in stow curl unzip; do
-  if ! command -v "$cmd" &>/dev/null; then
-    echo "❌ Required command '$cmd' not found. Install it first."
-    exit 1
-  fi
-done
-
-# ------------------------------------------------------------
 # Detect OS
 # ------------------------------------------------------------
 if [[ "$(uname)" == "Darwin" ]]; then
   OS_TYPE="macos"
-  echo "🖥️ OS detected: $OS_TYPE"
+
 elif [[ "$(uname)" == "Linux" ]]; then
-  if grep -qi "arch" /etc/os-release 2>/dev/null; then
-    OS_TYPE="arch"
-  elif grep -qi "ubuntu" /etc/os-release 2>/dev/null; then
-    OS_TYPE="ubuntu"
+  if [[ -r /etc/os-release ]]; then
+    source /etc/os-release
+    OS_TYPE="$ID"
   else
     OS_TYPE="linux"
   fi
-  echo "🖥️ OS detected: $OS_TYPE"
+
 else
   echo "❌ Unsupported OS"
+  exit 1
 fi
 
+echo "🖥️ OS detected: $OS_TYPE"
 # ------------------------------------------------------------
 # XDG Base Directories (KISS)
 # ------------------------------------------------------------
@@ -77,7 +68,7 @@ DOTDIR="$(cd "$(dirname "$0")" && pwd)"
 for pkg in "$DOTDIR"/*/; do
   pkg_name="$(basename "$pkg")"
   case "$pkg_name" in
-    .git|scripts|images) continue ;;
+  .git | scripts | images) continue ;;
   esac
   target="$STOW_TARGET/$pkg_name"
   if [[ -e "$target" || -L "$target" ]]; then
