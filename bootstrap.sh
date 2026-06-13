@@ -24,11 +24,11 @@ elif [[ "$(uname)" == "Linux" ]]; then
   fi
 
 else
-  echo "❌ Unsupported OS"
+  echo "Unsupported OS"
   exit 1
 fi
 
-echo "🖥️ OS detected: $OS_TYPE"
+echo "OS detected: $OS_TYPE"
 # ------------------------------------------------------------
 # XDG Base Directories (KISS)
 # ------------------------------------------------------------
@@ -45,7 +45,7 @@ chmod 700 "$HOME/.ssh"
 # ------------------------------------------------------------
 # Packages
 # ------------------------------------------------------------
-echo "📦 Installing base packages..."
+echo "Installing base packages..."
 
 if [[ "$OS_TYPE" == "macos" ]]; then
   ./scripts/osx-app.sh
@@ -76,7 +76,7 @@ for pkg in "$DOTDIR"/*/; do
       continue
     fi
     backup="${target}.backup"
-    echo "📦 Backing up $target to $backup"
+    echo "Backing up $target to $backup"
     mv "$target" "$backup"
   fi
 done
@@ -84,7 +84,7 @@ done
 # ------------------------------------------------------------
 # Stow dotfiles (FIRST!)
 # ------------------------------------------------------------
-echo "🔗 Linking dotfiles with stow..."
+echo "Linking dotfiles with stow..."
 
 cd "$DOTDIR"
 
@@ -107,16 +107,16 @@ for entry in "${dotfiles[@]}"; do
   dst="${entry#*:}"
 
   if [[ ! -e "$src" ]]; then
-    echo "⚠️  Source $src not found, skipping $dst"
+    echo "Source $src not found, skipping $dst"
     continue
   fi
 
   if [[ -e "$dst" && ! -L "$dst" ]]; then
-    echo "📦 Backing up $dst to ${dst}-backup"
+    echo "Backing up $dst to ${dst}-backup"
     mv "$dst" "${dst}-backup"
   fi
 
-  echo "🔗 Linking $src -> $dst"
+  echo "Linking $src -> $dst"
   ln -sf "$src" "$dst"
 done
 
@@ -129,7 +129,7 @@ fi
 # Oh My Zsh
 # ------------------------------------------------------------
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
-  echo "🐚 Installing Oh My Zsh..."
+  echo "Installing Oh My Zsh..."
   RUNZSH=no KEEP_ZSHRC=yes sh -c \
     "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 fi
@@ -139,7 +139,7 @@ fi
 # ------------------------------------------------------------
 TPM_DIR="$HOME/.tmux/plugins/tpm"
 if [[ ! -d "$TPM_DIR" ]]; then
-  echo "🧩 Installing tmux TPM..."
+  echo "Installing tmux TPM..."
   git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"
 fi
 
@@ -154,11 +154,11 @@ install_source_code_pro_font() {
   fi
 
   if ls "$FONT_DIR" | grep -qi "saucecode\|sourcecodepro" 2>/dev/null; then
-    echo "🔤 SourceCodePro Nerd Font already installed, skipping"
+    echo "SourceCodePro Nerd Font already installed, skipping"
     return
   fi
 
-  echo "🔤 Installing SourceCodePro Nerd Font..."
+  echo "Installing SourceCodePro Nerd Font..."
 
   mkdir -p "$FONT_DIR"
 
@@ -174,7 +174,7 @@ install_source_code_pro_font() {
     fc-cache -fv >/dev/null 2>&1 || true
   fi
 
-  echo "🔤 Nerd Font installed in $FONT_DIR"
+  echo "Nerd Font installed in $FONT_DIR"
 }
 
 install_source_code_pro_font
@@ -183,10 +183,10 @@ install_source_code_pro_font
 # Default shell → zsh
 # ------------------------------------------------------------
 if command -v zsh >/dev/null && [[ "$SHELL" != "$(command -v zsh)" ]]; then
-  echo "🐚 Setting zsh as default shell"
+  echo "Setting zsh as default shell"
   chsh -s "$(command -v zsh)" || true
 fi
 
 echo ""
-echo "✅ Bootstrap completed successfully"
-echo "➡️ Restart your terminal or run: exec zsh"
+echo "Bootstrap completed successfully"
+echo "Restart your terminal or run: exec zsh"

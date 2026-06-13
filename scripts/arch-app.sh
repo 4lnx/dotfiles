@@ -63,10 +63,10 @@ PACMAN_PACKAGES=(
   flatpak flatpak-xdg-utils sddm timeshift fish bazaar
 )
 
-echo "🍺 Installing pacman packages..."
+echo "Installing pacman packages..."
 for pkg in "${PACMAN_PACKAGES[@]}"; do
   if pacman -Qi "$pkg" &>/dev/null; then
-    echo "  ✓ $pkg"
+    echo "  $pkg"
   else
     echo "  Installing $pkg..."
     sudo pacman -S --noconfirm "$pkg"
@@ -77,7 +77,7 @@ done
 # Install AUR helper (yay)
 # ------------------------------------------------------------
 if ! command -v yay &>/dev/null; then
-  echo "🍺 Installing yay (AUR helper)..."
+  echo "Installing yay (AUR helper)..."
   BUILD_DIR="$(mktemp -d)"
   git clone https://aur.archlinux.org/yay.git "$BUILD_DIR/yay"
   (cd "$BUILD_DIR/yay" && makepkg -si --noconfirm)
@@ -104,14 +104,14 @@ AUR_PACKAGES=(
   matugen-bin
 )
 
-echo "🍺 Installing AUR packages..."
+echo "Installing AUR packages..."
 for pkg in "${AUR_PACKAGES[@]}"; do
   if yay -Qi "$pkg" &>/dev/null; then
-    echo "  ✓ $pkg"
+    echo "  $pkg"
   else
     echo "  Installing $pkg..."
     yay -S --noconfirm "$pkg"
   fi
 done
 
-echo "🍺 Done!"
+echo "Done!"
