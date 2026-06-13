@@ -52,7 +52,7 @@ PACMAN_PACKAGES=(
   virt-manager qemu-full libvirt dnsmasq
 
   # Dev
-  lazygit lazydocker
+  lazygit lazydocker mise
   prettier packer markdownlint-cli2 luarocks
   mesa libva-mesa-driver libva-utils
 
@@ -102,7 +102,6 @@ AUR_PACKAGES=(
   terraform-ls
   brave-bin
   matugen-bin
-  cloudflared-bin
 )
 
 echo "🍺 Installing AUR packages..."
