@@ -54,7 +54,7 @@ PACMAN_PACKAGES=(
   # Dev
   lazygit lazydocker
   prettier packer markdownlint-cli2 luarocks
-  mesa libva-mesa-driver mesa-vdpau libva-utils
+  mesa libva-mesa-driver libva-utils
 
   # Fonts
   ttf-jetbrains-mono ttf-jetbrains-mono-nerd ttf-opensans noto-fonts
