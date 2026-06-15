@@ -7,6 +7,7 @@
 ![Zsh](https://img.shields.io/badge/zsh-%23F7B93E.svg?style=for-the-badge&logo=zsh&logoColor=white)
 ![Tmux](https://img.shields.io/badge/tmux-1BB91F?style=for-the-badge&logo=tmux&logoColor=white)
 ![Neovim](https://img.shields.io/badge/NeoVim-%2357A143.svg?style=for-the-badge&logo=neovim&logoColor=white)
+![LazyVim](https://img.shields.io/badge/💤-LazyVim-2E3440?style=for-the-badge)
 ![Stow](https://img.shields.io/badge/GNU%20Stow-C03036?style=for-the-badge&logo=gnu&logoColor=white)
 ![Hyprland](https://img.shields.io/badge/Hyprland-2a2a2a?style=for-the-badge)
 
