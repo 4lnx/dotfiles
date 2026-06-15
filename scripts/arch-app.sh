@@ -20,7 +20,7 @@ PACMAN_PACKAGES=(
   eza fzf fd gnupg pinentry tree ipcalc fastfetch usage
 
   # Hyprland ecosystem
-  hyprland hypridle hyprlock hyprcursor hyprpaper hyprpicker hyprlauncher
+  hyprland hypridle hyprlock hyprcursor hyprpaper hyprpicker hyprlauncher uwsm
 
   # Desktop
   waybar rofi swaync dunst dolphin dolphin-plugins ffmpegthumbs
@@ -94,12 +94,9 @@ AUR_PACKAGES=(
   qt6ct-kde
   qview
   playerctl
-  python-setuptools
   zscroll
   nmrs
-  wireguard-gui-bin
   appflowy-bin
-  terraform-ls
   brave-bin
   matugen-bin
 )
