@@ -99,7 +99,7 @@ alias nvz='nvim ~/.zshrc'
 
 # Listing
 alias l='eza -l --icons --git'
-alias l='eza -la --icons --git'
+alias la='eza -la --icons --git'
 
 # Docker
 alias d='docker'
