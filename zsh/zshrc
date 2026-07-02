@@ -112,6 +112,9 @@ alias dcl='docker logs -f'
 # rm -rf
 alias rmf='rm -rf'
 
+# kubectl
+alias k='kubectl'
+
 # ----------------------------------------------------------
 # SDKs / INTEGRATIONS
 # ----------------------------------------------------------
